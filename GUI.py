@@ -10,43 +10,34 @@ class GUI(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super(GUI, self).__init__()
         self.setupUi(self)
-        # Connect your line edits or a new submit button to searchRecalls
-        # Assuming you want to trigger the search when the user presses Enter in any QLineEdit
-        self.lineEdit_2.returnPressed.connect(self.searchRecalls)
-        self.lineEdit_5.returnPressed.connect(self.searchRecalls)
-        self.lineEdit.returnPressed.connect(self.searchRecalls)
-        self.lineEdit_4.returnPressed.connect(self.searchRecalls)
-        self.lineEdit_3.returnPressed.connect(self.searchRecalls)
+        # Connect the button click and return pressed to perform_search method
+        self.pushButton.clicked.connect(self.perform_search)
+        self.lineEdit_4.returnPressed.connect(self.perform_search)
 
-    def searchRecalls(self):
-        # Assuming the search API returns a list of dictionaries
-        results = RecallsAPI.search_recalls(
-            self.lineEdit_2.text(),
-            category=self.lineEdit.text(),
-            department=self.lineEdit_5.text(),
-            date=self.lineEdit_4.text(),
-            last_updated=self.lineEdit_3.text()
-        )
+    def perform_search(self):
+        recall_id = self.lineEdit_4.text().strip()
+        if recall_id:
+            try:
+                result = RecallsAPI.get_recall_details(recall_id)  # Make sure this function is defined in your API module
+                self.display_details(result)
+            except Exception as e:
+                print(f"Error during search: {str(e)}")
+                QMessageBox.critical(self, "Search Error", "Failed to fetch recall details.")
+                self.textEdit.setText("Failed to load recall details.")
+        else:
+            QMessageBox.information(self, "Input Error", "Please enter a valid Recall ID.")
 
-        self.display_search_results(results)
+    def display_details(self, recall_details):
+        if recall_details and 'recallId' in recall_details:
+            details_text = f"Recall ID: {recall_details['recallId']}\nTitle: {recall_details['title']}\n"
+            details_text += f"Category: {', '.join(recall_details.get('category', []))}\n"
+            details_text += f"Published Date: {recall_details['date_published']}\nURL: {recall_details['url']}\n\n"
+            for panel in recall_details.get('panels', []):
+                details_text += f"{panel['title']}:\n{panel['text']}\n\n"
+            self.textEdit.setText(details_text)
+        else:
+            self.textEdit.setText("No details found or invalid recall ID.")
 
-    def display_search_results(self, search_results):
-        # Clear existing widgets from the grid layout
-        while self.gridLayout.count():
-            item = self.gridLayout.takeAt(0)
-            widget = item.widget()
-            if widget is not None:
-                widget.deleteLater()
-
-        # Populate the grid layout with new tiles
-        row, col = 0, 0
-        for recall in search_results:
-            tile = RecallTile(recall)
-            self.gridLayout.addWidget(tile, row, col)
-            col += 1
-            if col >= 3:  # Assuming you want 3 columns
-                col = 0
-                row += 1
 def main():
     app = QApplication(sys.argv)
     window = GUI()
