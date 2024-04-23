@@ -8,10 +8,10 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QLineEdit, QPushButton, Q
 class RecallWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Recall Search and Save")
+        self.setWindowTitle("Recall Grabber - Kevin David")
         self.setGeometry(100, 100, 800, 600)
 
-        # MySQL connection setup
+        #MySQL connection settings
         self.db = mysql.connector.connect(
             host="localhost",
             user="savedacc",
@@ -20,19 +20,16 @@ class RecallWindow(QMainWindow):
         )
         self.cursor = self.db.cursor()
 
-        # Tab widget
+        #Tab settings
         self.tab_widget = QTabWidget()
         self.setCentralWidget(self.tab_widget)
-
-        # Tab 1: Search recalls
+        #Tab 1: Search recalls
         self.search_tab = QWidget()
         self.setup_search_tab()
-
-        # Tab 2: Saved recalls
+        #Tab 2: Saved recalls
         self.saved_tab = QWidget()
         self.setup_saved_tab()
-
-        # Add tabs
+        #Add tabs
         self.tab_widget.addTab(self.search_tab, "Home")
         self.tab_widget.addTab(self.saved_tab, "Saved")
 
