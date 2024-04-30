@@ -29,7 +29,6 @@ class RecallWindow(QMainWindow):
         #Tab 2: Saved recalls
         self.saved_tab = QWidget()
         self.setup_saved_tab()
-        #Add tabs
         self.tab_widget.addTab(self.search_tab, "Home")
         self.tab_widget.addTab(self.saved_tab, "Saved")
 
@@ -106,7 +105,6 @@ class RecallWindow(QMainWindow):
                 self.db.rollback()
 
     def load_saved_recalls(self):
-        """Load saved recalls from the database and display them in the saved tab."""
         try:
             self.cursor.execute("SELECT title, recall_id FROM saved_recalls")
             self.saved_list.clear()
