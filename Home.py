@@ -59,19 +59,55 @@ class RecallWindow(QMainWindow):
         self.load_saved_recalls()
         layout.addWidget(self.saved_list)
         self.saved_tab.setLayout(layout)
+        self.saved_list.itemClicked.connect(self.display_saved_recall_details)
+
+    def display_saved_recall_details(self, item):
+        recall_id = item.text().split(': ')[0]
+        query = "SELECT * FROM saved_recalls WHERE recall_id = %s"
+        try:
+            self.cursor.execute(query, (recall_id,))
+            recall = self.cursor.fetchone()
+            if recall:
+                details = f"""
+                Recall ID: {recall[0]}
+                Title: {recall[1]}
+                Start Date: {recall[2]}
+                Date Published: {recall[3]}
+                Category: {recall[4]}
+                URL: {recall[5]}
+                """
+                QMessageBox.information(self, "Recall Details", details)
+            else:
+                QMessageBox.information(self, "Not Found", "No details found for the selected recall.")
+        except mysql.connector.Error as e:
+            QMessageBox.critical(self, "Database Error", f"An error occurred when accessing the database: {str(e)}")
 
     def on_search_clicked(self):
         recall_id = self.recall_id_input.text().strip()
         self.fetch_recall_details(recall_id)
 
     def fetch_recall_details(self, recall_id):
-        url = f"http://healthycanadians.gc.ca/recall-alert-rappel-avis/api/{recall_id}/en"
-        response = requests.get(url)
-        if response.status_code == 200:
-            self.current_recall = response.json()
-            self.display_recall_details(self.current_recall)
-        else:
-            self.results_text.setText("Failed to fetch recall details.")
+        try:
+            url = f"http://healthycanadians.gc.ca/recall-alert-rappel-avis/api/{recall_id}/en"
+            response = requests.get(url, timeout=10)  #EH: timeout request in case it hangs endlessly
+            if response.status_code == 200:
+                try:
+                    self.current_recall = response.json()
+                    self.display_recall_details(self.current_recall)
+                except ValueError as e:  #EH: Catches JSON decode errors
+                    self.results_text.setText("Error processing the API response. Please try again later.")
+                    print(f"JSON Error: {e}")  #EH: Logs to debug
+            elif response.status_code == 404:
+                self.results_text.setText("Recall ID not found. Please check the ID and try again.")
+            else:
+                self.results_text.setText(
+                    f"Unexpected response status: {response.status_code}. Please try again later.")
+        except requests.exceptions.RequestException as e:
+            self.results_text.setText(f"Network error: {str(e)}")
+            print(f"Request Exception: {e}")  #EH: Logs to console
+        except Exception as e:
+            self.results_text.setText("An unexpected error occurred. Please contact support if the problem persists.")
+            print(f"General Exception: {e}")  #EH: Logs to console
 
     def display_recall_details(self, recall_data):
         details = (
@@ -106,10 +142,11 @@ class RecallWindow(QMainWindow):
 
     def load_saved_recalls(self):
         try:
-            self.cursor.execute("SELECT title, recall_id FROM saved_recalls")
+            self.cursor.execute("SELECT recall_id, title FROM saved_recalls")
             self.saved_list.clear()
-            for (title, recall_id) in self.cursor:
-                self.saved_list.addItem(f"{recall_id}: {title}")
+            for (recall_id, title) in self.cursor:
+                self.saved_list.addItem(
+                    f"{recall_id}: {title}")
         except mysql.connector.Error as e:
             QMessageBox.critical(self, "Error", f"Error loading saved recalls: {str(e)}")
 
