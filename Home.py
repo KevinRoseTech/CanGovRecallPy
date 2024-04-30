@@ -20,7 +20,6 @@ class RecallWindow(QMainWindow):
         )
         self.cursor = self.db.cursor()
 
-        #Tab settings
         self.tab_widget = QTabWidget()
         self.setCentralWidget(self.tab_widget)
         #Tab 1: Search recalls
