@@ -9,6 +9,7 @@ Connection details can be found in the def __init__(self) method and changed acc
 
 
 The query used to store recall data from the application is:
+
 CREATE TABLE `saved_recalls` (
   `recall_id` VARCHAR(20) NOT NULL,
   `title` VARCHAR(255) NOT NULL,
@@ -22,7 +23,8 @@ CREATE TABLE `saved_recalls` (
 
 
 
-Images:
+## Images:
+
 Home Tab:
 
 ![image](https://github.com/KevinRoseTech/CanGovRecallPy/assets/107796703/42dd2c58-a4b2-4f19-9489-12cf2b948ae6)
