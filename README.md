@@ -24,10 +24,15 @@ CREATE TABLE `saved_recalls` (
 
 Images:
 Home Tab:
+
 ![image](https://github.com/KevinRoseTech/CanGovRecallPy/assets/107796703/42dd2c58-a4b2-4f19-9489-12cf2b948ae6)
+
 Saved Tab:
+
 ![image](https://github.com/KevinRoseTech/CanGovRecallPy/assets/107796703/ec55e49f-9524-454f-ba96-e4fb6a4ca0c2)
+
 Saved Tab specific recall:
+
 ![image](https://github.com/KevinRoseTech/CanGovRecallPy/assets/107796703/60f975e6-a6b4-481b-b639-a41cd3607aad)
 
 
