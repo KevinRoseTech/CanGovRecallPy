@@ -4,6 +4,7 @@ I created this as part of the Programming Language Research course I took in Col
 
 A mySQL database is needed to save specific recalls. 
 Connection details can be found in the def __init__(self) method and changed accordingly to fit your own installation if needed.
+
 ![image](https://github.com/KevinRoseTech/CanGovRecallPy/assets/107796703/e311c513-7c55-4e3d-98d4-18c4f013268f)
 
 
