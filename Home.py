@@ -1,4 +1,5 @@
 # https://github.com/KevinRoseTech/CanGovRecallPy
+# Check README for detailed information
 import sys
 import requests
 import mysql.connector
