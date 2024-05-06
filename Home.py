@@ -1,3 +1,4 @@
+# https://github.com/KevinRoseTech/CanGovRecallPy
 import sys
 import requests
 import mysql.connector
@@ -8,7 +9,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QLineEdit, QPushButton, Q
 class RecallWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Recall Grabber - Kevin David")
+        self.setWindowTitle("Recall Grabber")
         self.setGeometry(100, 100, 800, 600)
 
         #MySQL connection settings
