@@ -4,6 +4,9 @@ import requests
 import mysql.connector
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLineEdit, QPushButton, QTextEdit, QVBoxLayout, QWidget, \
     QTabWidget, QListWidget, QMessageBox
+from datetime import datetime
+
+
 
 
 class RecallWindow(QMainWindow):
@@ -71,8 +74,8 @@ class RecallWindow(QMainWindow):
                 details = f"""
                 Recall ID: {recall[0]}
                 Title: {recall[1]}
-                Start Date: {recall[2]}
-                Date Published: {recall[3]}
+                Start Date: {recall[2]}  
+                Date Published: {recall[3]} # Always returns as 0 for certain recalls, external API issue.
                 Category: {recall[4]}
                 URL: {recall[5]}
                 """
@@ -114,8 +117,8 @@ class RecallWindow(QMainWindow):
             f"URL: {recall_data.get('url')}\n"
             f"Recall ID: {recall_data.get('recallId')}\n"
             f"Title: {recall_data.get('title').strip()}\n"
-            f"Start Date: {recall_data.get('start_date')}\n"
-            f"Date Published: {recall_data.get('date_published')}\n"
+            f"Start Date: {self.unix_to_readable_date(recall_data.get('start_date'))}\n"
+            f"Date Published: {self.unix_to_readable_date(recall_data.get('date_published'))}\n"
             f"Category: {', '.join(str(cat) for cat in recall_data.get('category', []))}\n"
         )
         self.results_text.setText(details)
@@ -150,6 +153,11 @@ class RecallWindow(QMainWindow):
         except mysql.connector.Error as e:
             QMessageBox.critical(self, "Error", f"Error loading saved recalls: {str(e)}")
 
+    # Translates the UNIX timestamp format to day/month/year for UX clarity
+    def unix_to_readable_date(self, timestamp):
+        if timestamp:
+            return datetime.utcfromtimestamp(int(timestamp)).strftime('%d/%m/%Y')
+        return 'Unknown Date'
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
