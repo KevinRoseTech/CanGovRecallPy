@@ -38,3 +38,9 @@ Saved Tab specific recall:
 ![image](https://github.com/KevinRoseTech/CanGovRecallPy/assets/107796703/60f975e6-a6b4-481b-b639-a41cd3607aad)
 
 
+## Software/libraries/packages used:
+
+* Python (Language)
+* PyQT5 (Python GUI library)
+* MySQL (Database)
+* Postman (verifying GET responses)
