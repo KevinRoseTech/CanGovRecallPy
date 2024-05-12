@@ -15,6 +15,15 @@ class RecallWindow(QMainWindow):
         self.setWindowTitle("Recall Grabber")
         self.setGeometry(100, 100, 800, 600)
 
+
+        # Category dictionary for better user clarity (Issue #3)
+        self.category_map = {
+            '1': 'Food',
+            '2': 'Vehicles',
+            '3': 'Health Products',
+            '4': 'Consumer Products'
+        }
+
         #MySQL connection settings
         self.db = mysql.connector.connect(
             host="localhost",
@@ -71,20 +80,16 @@ class RecallWindow(QMainWindow):
             self.cursor.execute(query, (recall_id,))
             recall = self.cursor.fetchone()
             if recall:
-                start_date_formatted = self.unix_to_readable_date(recall[2])
-                date_published_formatted = self.unix_to_readable_date(recall[3]) if recall[3] != 0 else "Not Available"
-
+                category_description = self.category_map.get(str(recall[4]), 'Unknown category')
                 details = f"""
                 Recall ID: {recall[0]}
                 Title: {recall[1]}
-                Start Date: {start_date_formatted}
-                Date Published: {date_published_formatted}
-                Category: {recall[4]}
+                Start Date: {self.unix_to_readable_date(recall[2])}
+                Date Published: {self.unix_to_readable_date(recall[3]) if recall[3] != 0 else "Not Available"}
+                Category: {recall[4]} ({category_description})
                 URL: {recall[5]}
                 """
                 QMessageBox.information(self, "Recall Details", details)
-            else:
-                QMessageBox.information(self, "Not Found", "No details found for the selected recall.")
         except mysql.connector.Error as e:
             QMessageBox.critical(self, "Database Error", f"An error occurred when accessing the database: {str(e)}")
 
@@ -116,13 +121,15 @@ class RecallWindow(QMainWindow):
             print(f"General Exception: {e}")  #EH: Logs to console
 
     def display_recall_details(self, recall_data):
+        category_description = ', '.join(
+            self.category_map.get(str(cat), 'Unknown category') for cat in recall_data.get('category', []))
         details = (
             f"URL: {recall_data.get('url')}\n"
             f"Recall ID: {recall_data.get('recallId')}\n"
             f"Title: {recall_data.get('title').strip()}\n"
             f"Start Date: {self.unix_to_readable_date(recall_data.get('start_date'))}\n"
             f"Date Published: {self.unix_to_readable_date(recall_data.get('date_published'))}\n"
-            f"Category: {', '.join(str(cat) for cat in recall_data.get('category', []))}\n"
+            f"Category: {category_description}\n"
         )
         self.results_text.setText(details)
 
@@ -156,7 +163,7 @@ class RecallWindow(QMainWindow):
         except mysql.connector.Error as e:
             QMessageBox.critical(self, "Error", f"Error loading saved recalls: {str(e)}")
 
-    # Translates the UNIX timestamp format to day/month/year for UX clarity
+    # Translates the UNIX timestamp format to day/month/year for user clarity
     def unix_to_readable_date(self, timestamp):
         if timestamp:
             return datetime.utcfromtimestamp(int(timestamp)).strftime('%d/%m/%Y')
