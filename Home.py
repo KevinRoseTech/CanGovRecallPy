@@ -71,11 +71,14 @@ class RecallWindow(QMainWindow):
             self.cursor.execute(query, (recall_id,))
             recall = self.cursor.fetchone()
             if recall:
+                start_date_formatted = self.unix_to_readable_date(recall[2])
+                date_published_formatted = self.unix_to_readable_date(recall[3]) if recall[3] != 0 else "Not Available"
+
                 details = f"""
                 Recall ID: {recall[0]}
                 Title: {recall[1]}
-                Start Date: {recall[2]}  
-                Date Published: {recall[3]} # Always returns as 0 for certain recalls, external API issue.
+                Start Date: {start_date_formatted}
+                Date Published: {date_published_formatted}
                 Category: {recall[4]}
                 URL: {recall[5]}
                 """
