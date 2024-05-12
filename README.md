@@ -5,7 +5,7 @@ I created this as part of the Programming Language Research course I took in Col
 ## The Canadian Government's API:
 API request formatting and response information can be found on this [Official Recalls and Safety Alerts](https://healthycanadians.gc.ca/connect-connectez/data-donnees/recall-alert-rappel-avis-eng.php) post, however as of writing this in May 2024, the post was last updated in 2015. It details 3 main requests the API handle: Recent recalls, Recall details, and Search. The latter request, search, states the API has "limited search functionality". In my extensive testing, the API has no text string Search functionality at all. 
 
-Both Recent Recalls and Recall Details GET requests return responses, though not without minor issues. For example, entering the recall ID 178 will get the CAMPRO MOTORHOME recall details, but it's recall ID returned is RA-1976133. Entering the recall RA-1976133 does not get any response. I am still awaiting a response from the HealthyCanadians help team to better understand this API, but despite its age and issues, it still offers some value at the very least for learning. 
+Both Recent Recalls and Recall Details GET requests return responses, though not without minor issues. For example, entering the recall ID 178 will get the CAMPRO MOTORHOME recall details, but it's recall ID returned is RA-1976133. Entering the recall RA-1976133  does not get any response. I am still awaiting a response from the HealthyCanadians help team to better understand this API, but despite its age and issues, it still offers some value at the very least for learning. 
 
 ## MySQL database:
 A simple mySQL database is needed to save specific recalls. 
@@ -41,15 +41,18 @@ The basic query used to store recall data from the application is:
 
 Home Tab:
 
-![image](https://github.com/KevinRoseTech/CanGovRecallPy/assets/107796703/42dd2c58-a4b2-4f19-9489-12cf2b948ae6)
+![image](https://github.com/KevinRoseTech/CanGovRecallPy/assets/107796703/8444dcc5-0fc9-44da-ae09-5cef48df84d8)
+
 
 Saved Tab:
 
-![image](https://github.com/KevinRoseTech/CanGovRecallPy/assets/107796703/ec55e49f-9524-454f-ba96-e4fb6a4ca0c2)
+![image](https://github.com/KevinRoseTech/CanGovRecallPy/assets/107796703/957fa293-2e74-475e-b3ee-5af73001c687)
+
 
 Saved Tab specific recall:
 
-![image](https://github.com/KevinRoseTech/CanGovRecallPy/assets/107796703/60f975e6-a6b4-481b-b639-a41cd3607aad)
+![image](https://github.com/KevinRoseTech/CanGovRecallPy/assets/107796703/1577509c-7a68-4373-9b71-e20de52388b5)
+
 
 
 ## Software/libraries/packages used:
